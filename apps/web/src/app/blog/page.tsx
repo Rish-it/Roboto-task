@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 
 import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
 import { PageBuilder } from "@/components/pagebuilder";
+import { SearchWrapper } from "@/components/search/search-wrapper";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogIndexPageData } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
@@ -79,6 +80,10 @@ export default async function BlogIndexPage() {
       <div className="container my-16 mx-auto px-4 md:px-6">
         <BlogHeader title={title} description={description} />
 
+        {/* Search Component */}
+        <SearchWrapper />
+
+        {/* Original Blog Display (you may want to conditionally hide this when searching) */}
         {featuredBlogs.length > 0 && (
           <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
             {featuredBlogs.map((blog) => (
