@@ -3,6 +3,7 @@
 import { useHits } from 'react-instantsearch';
 import Link from 'next/link';
 import { formatDate } from '@/utils';
+import { CategoryBadge } from '@/components/category-badge';
 
 interface BlogHit {
   objectID: string;
@@ -13,6 +14,12 @@ interface BlogHit {
   author?: {
     name: string;
     position?: string;
+  };
+  category?: {
+    title: string;
+    slug: string;
+    color: string;
+    icon?: string;
   };
   imageUrl?: string;
 }
@@ -55,9 +62,18 @@ export function SearchHits() {
             )}
             
             <div className="space-y-2">
+              {hit.category && (
+                <CategoryBadge
+                  title={hit.category.title}
+                  color={hit.category.color}
+                  icon={hit.category.icon}
+                  size="small"
+                />
+              )}
+              
               <h2 className="text-xl font-semibold leading-tight">
                 <Link
-                  href={hit.slug}
+                  href={`/blog/post${hit.slug.replace('/blog', '')}`}
                   className="hover:underline"
                 >
                   {hit.title}

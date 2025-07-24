@@ -13,7 +13,7 @@ import { getSEOMetadata } from "@/lib/seo";
 async function fetchBlogSlugPageData(slug: string, stega = true) {
   return await sanityFetch({
     query: queryBlogSlugPageData,
-    params: { slug: `/blog/${slug}` },
+    params: { slug: `/blog/post/${slug}` },
     stega,
   });
 }
@@ -23,8 +23,11 @@ async function fetchBlogPaths() {
   const paths: { slug: string }[] = [];
   for (const slug of slugs) {
     if (!slug) continue;
-    const [, , path] = slug.split("/");
-    if (path) paths.push({ slug: path });
+    const parts = slug.split("/");
+    if (parts.length >= 4 && parts[1] === "blog" && parts[2] === "post") {
+      const postSlug = parts[3];
+      if (postSlug) paths.push({ slug: postSlug });
+    }
   }
   return paths;
 }
@@ -97,4 +100,4 @@ export default async function BlogSlugPage({
       </div>
     </div>
   );
-}
+} 

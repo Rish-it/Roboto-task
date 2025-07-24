@@ -15,6 +15,13 @@ const BLOG_INDEXING_QUERY = `
       name,
       position
     },
+    "category": category->{
+      _id,
+      title,
+      "slug": slug.current,
+      color,
+      icon
+    },
     "content": array::join(string::split(array::join(richText[].children[].text, " "), ""), " "),
     "imageUrl": image.asset->url
   }
@@ -32,6 +39,13 @@ interface BlogPost {
   author?: {
     name: string;
     position?: string;
+  };
+  category?: {
+    _id: string;
+    title: string;
+    slug: string;
+    color: string;
+    icon?: string;
   };
   content: string;
   imageUrl?: string;

@@ -46,6 +46,18 @@ const blogAuthorFragment = /* groq */ `
   }
 `;
 
+const blogCategoryFragment = /* groq */ `
+  category->{
+    _id,
+    title,
+    description,
+    "slug": slug.current,
+    color,
+    icon,
+    featured
+  }
+`;
+
 const blogCardFragment = /* groq */ `
   _type,
   _id,
@@ -56,7 +68,8 @@ const blogCardFragment = /* groq */ `
   orderRank,
   ${imageFragment},
   publishedAt,
-  ${blogAuthorFragment}
+  ${blogAuthorFragment},
+  ${blogCategoryFragment}
 `;
 
 const buttonsFragment = /* groq */ `
@@ -228,6 +241,7 @@ export const queryBlogSlugPageData = defineQuery(`
     ...,
     "slug": slug.current,
     ${blogAuthorFragment},
+    ${blogCategoryFragment},
     ${imageFragment},
     ${richTextFragment},
     ${pageBuilderFragment}
@@ -280,6 +294,48 @@ export const queryGenericPageOGData = defineQuery(`
   *[ defined(slug.current) && _id == $id][0]{
     ${ogFieldsFragment}
   }
+`);
+
+// Category-related queries
+export const queryCategoriesList = defineQuery(`
+  *[_type == "category"] | order(featured desc, sortOrder asc, title asc){
+    _id,
+    title,
+    description,
+    "slug": slug.current,
+    color,
+    icon,
+    featured,
+    sortOrder,
+    "postCount": count(*[_type == "blog" && references(^._id) && (seoHideFromLists != true)])
+  }
+`);
+
+export const queryCategoryPageData = defineQuery(`
+  *[_type == "category" && slug.current == $categorySlug][0]{
+    ...,
+    _id,
+    _type,
+    title,
+    description,
+    "slug": slug.current,
+    color,
+    icon,
+    featured,
+    "blogs": *[_type == "blog" && category._ref == ^._id && (seoHideFromLists != true)] | order(orderRank asc, publishedAt desc){
+      ${blogCardFragment}
+    }
+  }
+`);
+
+export const queryBlogsByCategory = defineQuery(`
+  *[_type == "blog" && references($categoryId) && (seoHideFromLists != true)] | order(orderRank asc, publishedAt desc){
+    ${blogCardFragment}
+  }
+`);
+
+export const queryCategoryPaths = defineQuery(`
+  *[_type == "category" && defined(slug.current)].slug.current
 `);
 
 export const queryFooterData = defineQuery(`

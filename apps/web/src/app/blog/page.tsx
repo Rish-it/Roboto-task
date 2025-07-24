@@ -1,15 +1,20 @@
 import { notFound } from "next/navigation";
 
 import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
+import { CategoryNavigation } from "@/components/category-navigation";
 import { PageBuilder } from "@/components/pagebuilder";
 import { SearchWrapper } from "@/components/search/search-wrapper";
 import { sanityFetch } from "@/lib/sanity/live";
-import { queryBlogIndexPageData } from "@/lib/sanity/query";
+import { queryBlogIndexPageData, queryCategoriesList } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
 import { handleErrors } from "@/utils";
 
 async function fetchBlogPosts() {
   return await handleErrors(sanityFetch({ query: queryBlogIndexPageData }));
+}
+
+async function fetchCategories() {
+  return await handleErrors(sanityFetch({ query: queryCategoriesList }));
 }
 
 export async function generateMetadata() {
@@ -32,6 +37,7 @@ export async function generateMetadata() {
 
 export default async function BlogIndexPage() {
   const [res, err] = await fetchBlogPosts();
+  const [categoriesRes] = await fetchCategories();
   if (err || !res?.data) notFound();
 
   const {
@@ -80,13 +86,16 @@ export default async function BlogIndexPage() {
       <div className="container my-16 mx-auto px-4 md:px-6">
         <BlogHeader title={title} description={description} />
 
+        {/* Category Navigation */}
+        <CategoryNavigation categories={categoriesRes?.data || []} />
+
         {/* Search Component */}
         <SearchWrapper />
 
         {/* Original Blog Display (you may want to conditionally hide this when searching) */}
         {featuredBlogs.length > 0 && (
           <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
-            {featuredBlogs.map((blog) => (
+            {featuredBlogs.map((blog: any) => (
               <FeaturedBlogCard key={blog._id} blog={blog} />
             ))}
           </div>
@@ -94,7 +103,7 @@ export default async function BlogIndexPage() {
 
         {remainingBlogs.length > 0 && (
           <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 mt-8">
-            {remainingBlogs.map((blog) => (
+            {remainingBlogs.map((blog: any) => (
               <BlogCard key={blog._id} blog={blog} />
             ))}
           </div>

@@ -13,11 +13,14 @@ async function setupAlgoliaIndex() {
           'title',
           'description', 
           'content',
-          'author.name'
+          'author.name',
+          'category.title'
         ],
         attributesForFaceting: [
           'author.name',
-          'publishedAt'
+          'publishedAt',
+          'category.title',
+          'category.slug'
         ],
         ranking: [
           'typo',

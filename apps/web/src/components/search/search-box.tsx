@@ -4,7 +4,11 @@ import { useState } from 'react';
 import { useSearchBox } from 'react-instantsearch';
 import { Search, X } from 'lucide-react';
 
-export function SearchBox() {
+interface SearchBoxProps {
+  categorySlug?: string;
+}
+
+export function SearchBox({ categorySlug }: SearchBoxProps = {}) {
   const { query, refine, clear } = useSearchBox();
   const [inputValue, setInputValue] = useState(query);
 

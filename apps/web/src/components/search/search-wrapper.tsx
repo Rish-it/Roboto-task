@@ -6,7 +6,11 @@ import { SearchBox } from './search-box';
 import { SearchHits } from './search-hits';
 import { SearchStats } from './search-stats';
 
-export function SearchWrapper() {
+interface SearchWrapperProps {
+  categorySlug?: string;
+}
+
+export function SearchWrapper({ categorySlug }: SearchWrapperProps = {}) {
   return (
     <div className="mt-8 mb-12">
       <InstantSearchNext
