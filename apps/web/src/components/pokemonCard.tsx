@@ -118,7 +118,7 @@ const getMainTypeStyle = (type: string) => {
 };
 
 export function PokemonCard({ pokemon }: PokemonCardProps) {
-  const mainType = pokemon.types[0];
+  const [mainType = "normal"] = pokemon.types;
   const mainTypeStyle = getMainTypeStyle(mainType);
 
   return (
