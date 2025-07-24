@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
-import { CategoryNavigation } from "@/components/category-navigation";
+import { CategoryNavigation } from "@/components/categoryNavigation";
 import { PageBuilder } from "@/components/pagebuilder";
 import { SearchWrapper } from "@/components/search/search-wrapper";
 import { sanityFetch } from "@/lib/sanity/live";
@@ -90,24 +90,25 @@ export default async function BlogIndexPage() {
         <CategoryNavigation categories={categoriesRes?.data || []} />
 
         {/* Search Component */}
-        <SearchWrapper />
+        <SearchWrapper>
+          {/* Featured blogs */}
+          {featuredBlogs.length > 0 && (
+            <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
+              {featuredBlogs.map((blog: any) => (
+                <FeaturedBlogCard key={blog._id} blog={blog} />
+              ))}
+            </div>
+          )}
 
-        {/* Original Blog Display (you may want to conditionally hide this when searching) */}
-        {featuredBlogs.length > 0 && (
-          <div className="mx-auto mt-8 sm:mt-12 md:mt-16 mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
-            {featuredBlogs.map((blog: any) => (
-              <FeaturedBlogCard key={blog._id} blog={blog} />
-            ))}
-          </div>
-        )}
-
-        {remainingBlogs.length > 0 && (
-          <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 mt-8">
-            {remainingBlogs.map((blog: any) => (
-              <BlogCard key={blog._id} blog={blog} />
-            ))}
-          </div>
-        )}
+          {/* Remaining blogs */}
+          {remainingBlogs.length > 0 && (
+            <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 mt-8">
+              {remainingBlogs.map((blog: any) => (
+                <BlogCard key={blog._id} blog={blog} />
+              ))}
+            </div>
+          )}
+        </SearchWrapper>
       </div>
 
       {pageBuilder && pageBuilder.length > 0 && (

@@ -2,7 +2,7 @@ import Link from "next/link";
 
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 
-import { CategoryBadge } from "./category-badge";
+import { CategoryBadge } from "./categoryBadge";
 import { SanityImage } from "./sanity-image";
 
 type Blog = NonNullable<
@@ -183,7 +183,7 @@ export function BlogCard({ blog }: BlogCardProps) {
             />
           )}
         </div>
-        <BlogContent title={title} slug={`/blog/post${slug.replace('/blog', '')}`} description={description} />
+        <BlogContent title={title} slug={slug} description={description} />
         <AuthorSection authors={authors} />
       </div>
     </article>

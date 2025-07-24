@@ -3,7 +3,8 @@
 import { useHits } from 'react-instantsearch';
 import Link from 'next/link';
 import { formatDate } from '@/utils';
-import { CategoryBadge } from '@/components/category-badge';
+import { CategoryBadge } from '@/components/categoryBadge';
+import type { CategoryColor } from '@/utils/categoryUtils';
 
 interface BlogHit {
   objectID: string;
@@ -18,21 +19,29 @@ interface BlogHit {
   category?: {
     title: string;
     slug: string;
-    color: string;
+    color: CategoryColor;
     icon?: string;
   };
   imageUrl?: string;
 }
 
-export function SearchHits() {
+interface SearchHitsProps {
+  showEmptyState?: boolean;
+}
+
+export function SearchHits({ showEmptyState = true }: SearchHitsProps = {}) {
   const { hits } = useHits<BlogHit>();
 
-  if (hits.length === 0) {
+  if (hits.length === 0 && showEmptyState) {
     return (
       <div className="text-center py-12">
         <p className="text-muted-foreground">No blog posts found.</p>
       </div>
     );
+  }
+
+  if (hits.length === 0 && !showEmptyState) {
+    return null;
   }
 
   return (
@@ -55,13 +64,12 @@ export function SearchHits() {
           </div>
           
           <div className="w-full space-y-4">
-            {hit.publishedAt && (
-              <time className="text-sm text-muted-foreground">
-                {formatDate(hit.publishedAt)}
-              </time>
-            )}
-            
-            <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              {hit.publishedAt && (
+                <time className="text-sm text-muted-foreground">
+                  {formatDate(hit.publishedAt)}
+                </time>
+              )}
               {hit.category && (
                 <CategoryBadge
                   title={hit.category.title}
@@ -70,10 +78,12 @@ export function SearchHits() {
                   size="small"
                 />
               )}
-              
+            </div>
+            
+            <div className="space-y-2">
               <h2 className="text-xl font-semibold leading-tight">
                 <Link
-                  href={`/blog/post${hit.slug.replace('/blog', '')}`}
+                  href={hit.slug}
                   className="hover:underline"
                 >
                   {hit.title}

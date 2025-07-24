@@ -322,7 +322,8 @@ export const queryCategoryPageData = defineQuery(`
     color,
     icon,
     featured,
-    "blogs": *[_type == "blog" && category._ref == ^._id && (seoHideFromLists != true)] | order(orderRank asc, publishedAt desc){
+    "totalBlogs": count(*[_type == "blog" && category._ref == ^._id && (seoHideFromLists != true)]),
+    "blogs": *[_type == "blog" && category._ref == ^._id && (seoHideFromLists != true)] | order(orderRank asc, publishedAt desc) [$startIndex...$endIndex]{
       ${blogCardFragment}
     }
   }

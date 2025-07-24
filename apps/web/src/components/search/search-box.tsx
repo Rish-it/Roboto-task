@@ -11,6 +11,10 @@ interface SearchBoxProps {
 export function SearchBox({ categorySlug }: SearchBoxProps = {}) {
   const { query, refine, clear } = useSearchBox();
   const [inputValue, setInputValue] = useState(query);
+  
+  const placeholder = categorySlug 
+    ? `Search in this category...`
+    : `Search blog posts...`;
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,7 +32,7 @@ export function SearchBox({ categorySlug }: SearchBoxProps = {}) {
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
         <input
           type="search"
-          placeholder="Search blog posts..."
+          placeholder={placeholder}
           value={inputValue}
           onChange={(e) => {
             setInputValue(e.target.value);

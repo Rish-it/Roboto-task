@@ -1,6 +1,7 @@
 'use client';
 
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
+import { Configure, useSearchBox } from 'react-instantsearch';
 import { searchClient, ALGOLIA_INDEX_NAME } from '@/lib/algolia/client';
 import { SearchBox } from './search-box';
 import { SearchHits } from './search-hits';
@@ -8,9 +9,31 @@ import { SearchStats } from './search-stats';
 
 interface SearchWrapperProps {
   categorySlug?: string;
+  children?: React.ReactNode;
 }
 
-export function SearchWrapper({ categorySlug }: SearchWrapperProps = {}) {
+function SearchContent({ categorySlug, children }: SearchWrapperProps) {
+  const { query } = useSearchBox();
+  const hasQuery = query.trim().length > 0;
+
+  return (
+    <>
+      <SearchBox categorySlug={categorySlug} />
+      <div className="mt-8">
+        {hasQuery ? (
+          <>
+            <SearchStats />
+            <SearchHits />
+          </>
+        ) : (
+          children
+        )}
+      </div>
+    </>
+  );
+}
+
+export function SearchWrapper({ categorySlug, children }: SearchWrapperProps) {
   return (
     <div className="mt-8 mb-12">
       <InstantSearchNext
@@ -18,11 +41,12 @@ export function SearchWrapper({ categorySlug }: SearchWrapperProps = {}) {
         indexName={ALGOLIA_INDEX_NAME}
         future={{ preserveSharedStateOnUnmount: true }}
       >
-        <SearchBox />
-        <div className="mt-8">
-          <SearchStats />
-          <SearchHits />
-        </div>
+        {categorySlug && (
+          <Configure filters={`category.slug:${categorySlug}`} />
+        )}
+        <SearchContent categorySlug={categorySlug}>
+          {children}
+        </SearchContent>
       </InstantSearchNext>
     </div>
   );
