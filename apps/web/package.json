@@ -11,7 +11,8 @@
     "format": "prettier --write .",
     "check-types": "tsc --noEmit",
     "index-blog": "tsx --env-file=.env.local scripts/index-blog.ts",
-    "setup-algolia": "tsx --env-file=.env.local scripts/setup-algolia.ts"
+    "setup-algolia": "tsx --env-file=.env.local scripts/setup-algolia.ts",
+    "setup:categories": "tsx --env-file=.env.local scripts/setup-categories.ts"
   },
   "dependencies": {
     "@algolia/client-search": "^5.34.1",

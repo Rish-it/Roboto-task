@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 
+import { CategoryBadge } from "./categoryBadge";
 import { SanityImage } from "./sanity-image";
 
 type Blog = NonNullable<
@@ -129,7 +130,7 @@ function AuthorSection({ authors }: { authors: Blog["authors"] }) {
   );
 }
 export function FeaturedBlogCard({ blog }: BlogCardProps) {
-  const { title, publishedAt, slug, authors, description, image } = blog ?? {};
+  const { title, publishedAt, slug, authors, description, image, category } = (blog ?? {}) as any;
 
   return (
     <article className="grid grid-cols-1 lg:grid-cols-2 gap-8 w-full">
@@ -162,7 +163,7 @@ export function BlogCard({ blog }: BlogCardProps) {
     );
   }
 
-  const { title, publishedAt, slug, authors, description, image } = blog;
+  const { title, publishedAt, slug, authors, description, image, category } = blog as any;
 
   return (
     <article className="grid grid-cols-1 gap-4 w-full">
@@ -171,7 +172,17 @@ export function BlogCard({ blog }: BlogCardProps) {
         <div className="absolute inset-0 rounded-2xl ring-1 ring-inset ring-gray-900/10" />
       </div>
       <div className="w-full space-y-4">
-        <BlogMeta publishedAt={publishedAt} />
+        <div className="flex items-center justify-between">
+          <BlogMeta publishedAt={publishedAt} />
+          {category && (
+            <CategoryBadge
+              title={category.title}
+              color={category.color}
+              icon={category.icon}
+              size="small"
+            />
+          )}
+        </div>
         <BlogContent title={title} slug={slug} description={description} />
         <AuthorSection authors={authors} />
       </div>

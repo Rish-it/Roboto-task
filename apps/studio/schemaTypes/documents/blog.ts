@@ -107,6 +107,25 @@ export const blog = defineType({
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
+      name: "category",
+      type: "reference",
+      title: "Category",
+      description: "Choose a category for this blog post to help organize content",
+      to: [
+        {
+          type: "category",
+          options: {
+            disableNew: true,
+          },
+        },
+      ],
+      options: {
+        disableNew: true,
+      },
+      group: GROUP.MAIN_CONTENT,
+      validation: (Rule) => Rule.required().error("Please select a category for this blog post"),
+    }),
+    defineField({
       name: "publishedAt",
       type: "date",
       initialValue: () => new Date().toISOString().split("T")[0],
@@ -146,6 +165,8 @@ export const blog = defineType({
       slug: "slug.current",
       author: "authors.0.name",
       publishDate: "publishedAt",
+      categoryTitle: "category.title",
+      categoryColor: "category.color",
     },
     prepare: ({
       title,
@@ -155,6 +176,8 @@ export const blog = defineType({
       isHidden,
       author,
       publishDate,
+      categoryTitle,
+      categoryColor,
     }) => {
       // Status indicators
       const visibility = isPrivate
@@ -168,11 +191,16 @@ export const blog = defineType({
       const dateInfo = publishDate
         ? `📅 ${new Date(publishDate).toLocaleDateString()}`
         : "⏳ Draft";
+      
+      // Category info
+      const categoryInfo = categoryTitle 
+        ? `🏷️ ${categoryTitle}` 
+        : "📂 No category";
 
       return {
         title: title || "Untitled Blog",
         media,
-        subtitle: `${visibility} | ${authorInfo} | ${dateInfo}`,
+        subtitle: `${visibility} | ${categoryInfo} | ${authorInfo} | ${dateInfo}`,
       };
     },
   },

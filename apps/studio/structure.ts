@@ -117,6 +117,12 @@ export const structure = (
       }),
       createList({
         S,
+        type: "category",
+        title: "Categories",
+        icon: File, // You can use a more relevant icon if desired
+      }),
+      createList({
+        S,
         type: "faq",
         title: "FAQs",
         icon: MessageCircleQuestion,
