@@ -9,6 +9,7 @@ import { RichText } from "@/components/richtext";
 import { SanityImage } from "@/components/sanity-image";
 import { SearchWrapper } from "@/components/search/search-wrapper";
 import { TableOfContent } from "@/components/table-of-content";
+import { PokemonCard } from "@/components/pokemonCard";
 import { client } from "@/lib/sanity/client";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogPaths, queryBlogSlugPageData, queryCategoryPaths, queryCategoryPageData } from "@/lib/sanity/query";
@@ -337,7 +338,7 @@ export default async function BlogSlugPage({
   const { data } = await fetchBlogSlugPageData(slug);
   if (!data) return notFound();
   
-  const { title, description, image, richText } = data ?? {};
+  const { title, description, image, richText, pokemon } = data ?? {};
 
   return (
     <div className="container my-16 mx-auto px-4 md:px-6">
@@ -365,8 +366,14 @@ export default async function BlogSlugPage({
         </main>
 
         <div className="hidden lg:block">
-          <div className="sticky top-4 rounded-lg ">
+          <div className="sticky top-4 rounded-lg space-y-6">
             <TableOfContent richText={richText} />
+            {pokemon && (
+              <div>
+                <h3 className="text-lg font-semibold mb-4">Featured Pokemon</h3>
+                <PokemonCard pokemon={pokemon} />
+              </div>
+            )}
           </div>
         </div>
       </div>

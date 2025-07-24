@@ -153,6 +153,14 @@ export const blog = defineType({
         "The main content of your blog post with text, images, and formatting",
       group: GROUP.MAIN_CONTENT,
     }),
+    defineField({
+      name: "pokemon",
+      type: "pokemon",
+      title: "Featured Pokemon",
+      description:
+        "Optional: Select a Pokemon to feature in this blog post",
+      group: GROUP.MAIN_CONTENT,
+    }),
     ...seoFields,
     ...ogFields,
   ],

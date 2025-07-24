@@ -58,6 +58,17 @@ const blogCategoryFragment = /* groq */ `
   }
 `;
 
+const pokemonFragment = /* groq */ `
+  pokemon{
+    id,
+    name,
+    types,
+    spriteUrl,
+    height,
+    weight
+  }
+`;
+
 const blogCardFragment = /* groq */ `
   _type,
   _id,
@@ -244,6 +255,7 @@ export const queryBlogSlugPageData = defineQuery(`
     ${blogCategoryFragment},
     ${imageFragment},
     ${richTextFragment},
+    ${pokemonFragment},
     ${pageBuilderFragment}
   }
 `);
