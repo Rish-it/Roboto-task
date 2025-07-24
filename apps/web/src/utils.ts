@@ -22,6 +22,15 @@ export const getTitleCase = (name: string) => {
   return titleTemp.charAt(0).toUpperCase() + titleTemp.slice(1);
 };
 
+export const formatDate = (dateString: string): string => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  });
+};
+
 type Response<T> = [T, undefined] | [undefined, string];
 
 export async function handleErrors<T>(

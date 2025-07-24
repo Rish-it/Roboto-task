@@ -9,26 +9,35 @@
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "index-blog": "tsx --env-file=.env.local scripts/index-blog.ts",
+    "setup-algolia": "tsx --env-file=.env.local scripts/setup-algolia.ts"
   },
   "dependencies": {
+    "@algolia/client-search": "^5.34.1",
     "@sanity/asset-utils": "^2.2.1",
     "@sanity/client": "^7.6.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/visual-editing": "^2.15.0",
     "@workspace/ui": "workspace:*",
+    "algoliasearch": "^5.34.1",
     "babel-plugin-react-compiler": "19.1.0-rc.2",
+    "dotenv": "^17.2.0",
     "lucide-react": "0.522.0",
     "next": "15.3.4",
     "next-sanity": "^9.12.0",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
     "react-dom": "19.1.0",
+    "react-instantsearch": "^7.16.2",
+    "react-instantsearch-nextjs": "^1.0.1",
     "schema-dts": "^1.1.5",
     "server-only": "^0.0.1",
-    "slugify": "^1.6.6"
+    "slugify": "^1.6.6",
+    "tsx": "^4.20.3"
   },
   "devDependencies": {
+    "@types/algoliasearch": "^4.0.4",
     "@types/node": "^24",
     "@types/react": "19.1.8",
     "@types/react-dom": "19.1.6",
