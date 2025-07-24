@@ -16,6 +16,13 @@ const BLOG_INDEXING_QUERY = `
       name,
       position
     },
+    "category": category->{
+      _id,
+      title,
+      "slug": slug.current,
+      color,
+      icon
+    },
     "content": array::join(string::split(array::join(richText[].children[].text, " "), ""), " "),
     "imageUrl": image.asset->url
   }
@@ -37,15 +44,14 @@ async function main() {
 }
 
 function printSummary(blogs: BlogHit[]) {
-  // eslint-disable-next-line no-console
   console.log(`Indexed ${blogs.length} blogs:\n`)
   blogs.forEach(blog => {
-    // eslint-disable-next-line no-console
     console.log([
       `Title:        ${blog.title}`,
       `Slug:         ${blog.slug}`,
       `Published:    ${blog.publishedAt ?? '-'}`,
       `Author:       ${blog.author?.name ?? '-'} (${blog.author?.position ?? '-'})`,
+      `Category:     ${blog.category?.title ?? '-'}`,
       `Description:  ${blog.description ?? '-'}`,
       `Image:        ${blog.imageUrl ?? '-'}`,
       `Order Rank:   ${blog.orderRank ?? '-'}`,

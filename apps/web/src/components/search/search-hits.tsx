@@ -29,7 +29,7 @@ interface SearchHitsProps {
   showEmptyState?: boolean;
 }
 
-export function SearchHits({ showEmptyState = true }: SearchHitsProps = {}) {
+export function SearchHits({ showEmptyState = true }: SearchHitsProps) {
   const { hits } = useHits<BlogHit>();
 
   if (hits.length === 0 && showEmptyState) {
@@ -99,10 +99,10 @@ export function SearchHits({ showEmptyState = true }: SearchHitsProps = {}) {
             
             {hit.author && (
               <div className="flex items-center gap-2">
-                <span className="text-sm text-muted-foreground">
-                  by {hit.author.name}
-                  {hit.author.position && ` 2 ${hit.author.position}`}
-                </span>
+                                  <span className="text-sm text-muted-foreground">
+                    by {hit.author.name}
+                    {hit.author.position && ` • ${hit.author.position}`}
+                  </span>
               </div>
             )}
           </div>
