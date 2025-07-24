@@ -33,6 +33,7 @@
     "slugify": "^1.6.6",
     "styled-components": "^6.1.19"
   },
+  "note": "Set SANITY_STUDIO_PRESENTATION_URL to https://roboto-task-web.vercel.app/ for production deployments.",
   "devDependencies": {
     "@faker-js/faker": "^9.8.0",
     "@portabletext/block-tools": "^1.1.31",

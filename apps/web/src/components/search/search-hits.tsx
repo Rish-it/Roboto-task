@@ -101,7 +101,7 @@ export function SearchHits({ showEmptyState = true }: SearchHitsProps = {}) {
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
                   by {hit.author.name}
-                  {hit.author.position && ` • ${hit.author.position}`}
+                  {hit.author.position && ` 2 ${hit.author.position}`}
                 </span>
               </div>
             )}

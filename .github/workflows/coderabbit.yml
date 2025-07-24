@@ -1,0 +1,13 @@
+name: CodeRabbit AI Review
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  code-review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: coderabbitai/coderabbit-github-action@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }} 
