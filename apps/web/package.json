@@ -38,7 +38,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-instantsearch": "^7.16.2",
-    "react-instantsearch-nextjs": "^1.0.1",
+    "react-instantsearch-nextjs": "^1.0.2",
     "react-spring": "^10.0.3",
     "schema-dts": "^1.1.5",
     "server-only": "^0.0.1",
