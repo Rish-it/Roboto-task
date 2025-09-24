@@ -37,7 +37,7 @@
   },
   "note": "Set SANITY_STUDIO_PRESENTATION_URL to https://roboto-task-web.vercel.app/ for production deployments.",
   "devDependencies": {
-    "@faker-js/faker": "^9.8.0",
+    "@faker-js/faker": "^10.0.0",
     "@portabletext/block-tools": "^1.1.31",
     "@sanity/eslint-config-studio": "^5.0.2",
     "@sanity/schema": "^3.93.0",
