@@ -72,7 +72,7 @@ const CategoryNavigationItem = memo<CategoryNavigationItemProps>(function Catego
   category,
   isActive = false,
 }) {
-  const IconComponent = getCategoryIcon(category.icon);
+  const IconComponent = getCategoryIcon(category.icon || undefined);
   const colorClass = getCategoryColorClass(category.color);
 
   return (
