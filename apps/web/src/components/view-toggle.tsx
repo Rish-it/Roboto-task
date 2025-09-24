@@ -1,22 +1,18 @@
 "use client";
 
-import { useState } from "react";
 import { cn } from "@/lib/utils";
 import { LayoutGrid, Layers3 } from "lucide-react";
 
 type ViewType = "grid" | "carousel";
 
 interface ViewToggleProps {
-  defaultView?: ViewType;
+  currentView: ViewType;
   onViewChange: (view: ViewType) => void;
   className?: string;
 }
 
-export function ViewToggle({ defaultView = "grid", onViewChange, className }: ViewToggleProps) {
-  const [currentView, setCurrentView] = useState<ViewType>(defaultView);
-
+export function ViewToggle({ currentView, onViewChange, className }: ViewToggleProps) {
   const handleViewChange = (view: ViewType) => {
-    setCurrentView(view);
     onViewChange(view);
   };
 

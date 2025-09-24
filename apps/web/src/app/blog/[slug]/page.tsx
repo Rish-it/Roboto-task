@@ -5,7 +5,6 @@ import { ArticleJsonLd } from "@/components/json-ld";
 import { BlogCard, BlogHeader } from "@/components/blog-card";
 import { getCategoryIcon } from "@/utils/categoryUtils";
 
-// Simple category badge without colors for blog pages
 function SimpleBlogCategoryBadge({ title, icon }: { title: string; icon?: string }) {
   const getDefaultIcon = (title: string) => {
     const titleLower = title.toLowerCase();
@@ -385,6 +384,13 @@ export default async function BlogSlugPage({
             </div>
           )}
           <RichText richText={richText ?? []} />
+          
+          {pokemon && (
+            <div className="mt-12 lg:hidden">
+              <h3 className="text-lg font-semibold mb-4">Featured Pokemon</h3>
+              <PokemonCard pokemon={pokemon} />
+            </div>
+          )}
         </main>
 
         <div className="hidden lg:block">

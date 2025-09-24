@@ -14,6 +14,11 @@ import { SanityLive } from "@/lib/sanity/live";
 
 import { Providers } from "../components/providers";
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+}
+
 const fontGeist = Geist({
   subsets: ["latin"],
   variable: "--font-geist",

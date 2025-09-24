@@ -5,7 +5,6 @@ import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 import { SanityImage } from "./sanity-image";
 import { getCategoryIcon } from "@/utils/categoryUtils";
 
-// Simple category badge without colors
 function SimpleCategoryBadge({ category }: { category: any }) {
   const getDefaultIcon = (title: string) => {
     const titleLower = title.toLowerCase();
