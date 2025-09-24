@@ -14,12 +14,14 @@ interface CategoryNavigationProps {
   categories: CategoryData[];
   className?: string;
   maxDisplay?: number;
+  activeCategory?: string;
 }
 
 export const CategoryNavigation = memo<CategoryNavigationProps>(function CategoryNavigation({
   categories,
   className,
   maxDisplay = 6,
+  activeCategory,
 }) {
   const { displayCategories, hasMoreCategories } = useCategoryFiltering({
     categories,
@@ -39,7 +41,11 @@ export const CategoryNavigation = memo<CategoryNavigationProps>(function Categor
         
         <div className="flex flex-wrap gap-2">
           {displayCategories.map((category) => (
-            <CategoryNavigationItem key={category._id} category={category} />
+            <CategoryNavigationItem 
+              key={category._id} 
+              category={category}
+              isActive={activeCategory === category.slug}
+            />
           ))}
           
           {hasMoreCategories && (
@@ -59,20 +65,23 @@ export const CategoryNavigation = memo<CategoryNavigationProps>(function Categor
 
 interface CategoryNavigationItemProps {
   category: CategoryData;
+  isActive?: boolean;
 }
 
 const CategoryNavigationItem = memo<CategoryNavigationItemProps>(function CategoryNavigationItem({
   category,
+  isActive = false,
 }) {
   const IconComponent = getCategoryIcon(category.icon);
   const colorClass = getCategoryColorClass(category.color);
 
   return (
-    <Link href={`/blog/${category.slug}`} className="group">
+    <Link href={`/blog/category/${category.slug}`} className="group">
       <span
         className={cn(
           "inline-flex items-center gap-1.5 font-medium border transition-all duration-200 hover:shadow-sm",
           "text-foreground text-xs px-2.5 py-1 rounded-full",
+          isActive ? "ring-2 ring-primary/20 bg-primary/10" : "",
           colorClass
         )}
       >

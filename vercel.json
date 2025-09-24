@@ -1,0 +1,18 @@
+{
+  "buildCommand": "turbo build",
+  "outputDirectory": "apps/web/.next",
+  "devCommand": "turbo dev",
+  "installCommand": "pnpm install",
+  "framework": "nextjs",
+  "functions": {
+    "apps/web/src/app/api/**": {
+      "maxDuration": 30
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/((?!api|_next|favicon.ico).*)",
+      "destination": "/apps/web/$1"
+    }
+  ]
+}

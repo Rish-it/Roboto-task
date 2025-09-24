@@ -18,15 +18,14 @@ export const blog = defineType({
   icon: FileTextIcon,
   groups: GROUPS,
   orderings: [orderRankOrdering],
-  description:
-    "A blog post that will be published on the website. Add a title, description, author, and content to create a new article for readers.",
+  description: "Blog post content management",
   fields: [
     orderRankField({ type: "blog" }),
     defineField({
       name: "title",
       type: "string",
       title: "Title",
-      description: "The headline of your blog post that readers will see first",
+      description: "Blog post title",
       group: GROUP.MAIN_CONTENT,
       validation: (Rule) => Rule.required().error("A blog title is required"),
     }),
@@ -35,28 +34,18 @@ export const blog = defineType({
       name: "description",
       type: "text",
       rows: 3,
-      description:
-        "A short summary of what your blog post is about (appears in search results)",
+      description: "Blog post summary for SEO",
       group: GROUP.MAIN_CONTENT,
       validation: (rule) => [
-        rule
-          .min(140)
-          .warning(
-            "The meta description should be at least 140 characters for optimal SEO visibility in search results",
-          ),
-        rule
-          .max(160)
-          .warning(
-            "The meta description should not exceed 160 characters as it will be truncated in search results",
-          ),
+        rule.min(140).warning("Description should be at least 140 characters for SEO"),
+        rule.max(160).warning("Description should not exceed 160 characters"),
       ],
     }),
     defineField({
       name: "slug",
       type: "slug",
       title: "URL",
-      description:
-        "The web address where people can find your blog post (automatically created from title)",
+      description: "URL slug for the blog post",
       group: GROUP.MAIN_CONTENT,
       components: {
         field: PathnameFieldComponent,
@@ -66,22 +55,13 @@ export const blog = defineType({
         slugify: createSlug,
         isUnique,
       },
-      validation: (Rule) => [
-        Rule.required().error("A URL slug is required"),
-        Rule.custom((value, context) => {
-          if (!value?.current) return true;
-          if (!value.current.startsWith("/blog/")) {
-            return 'URL slug must start with "/blog/"';
-          }
-          return true;
-        }),
-      ],
+      validation: (Rule) => Rule.required().error("A URL slug is required"),
     }),
     defineField({
       name: "authors",
       type: "array",
       title: "Authors",
-      description: "Who wrote this blog post (select from existing authors)",
+      description: "Blog post author",
       of: [
         defineArrayMember({
           type: "reference",
@@ -110,7 +90,7 @@ export const blog = defineType({
       name: "category",
       type: "reference",
       title: "Category",
-      description: "Choose a category for this blog post to help organize content",
+      description: "Blog post category",
       to: [
         {
           type: "category",
@@ -130,15 +110,13 @@ export const blog = defineType({
       type: "date",
       initialValue: () => new Date().toISOString().split("T")[0],
       title: "Published At",
-      description:
-        "The date when your blog post will appear to have been published",
+      description: "Publication date",
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
       name: "image",
       title: "Image",
-      description:
-        "The main picture that will appear at the top of your blog post and in previews",
+      description: "Featured image for the blog post",
       type: "image",
       group: GROUP.MAIN_CONTENT,
       validation: (Rule) => Rule.required(),
@@ -149,16 +127,14 @@ export const blog = defineType({
     defineField({
       name: "richText",
       type: "richText",
-      description:
-        "The main content of your blog post with text, images, and formatting",
+      description: "Main blog post content",
       group: GROUP.MAIN_CONTENT,
     }),
     defineField({
       name: "pokemon",
       type: "pokemon",
       title: "Featured Pokemon",
-      description:
-        "Optional: Select a Pokemon to feature in this blog post",
+      description: "Optional featured Pokemon",
       group: GROUP.MAIN_CONTENT,
     }),
     ...seoFields,
@@ -179,31 +155,16 @@ export const blog = defineType({
     prepare: ({
       title,
       media,
-      slug,
       isPrivate,
       isHidden,
       author,
       publishDate,
       categoryTitle,
-      categoryColor,
     }) => {
-      // Status indicators
-      const visibility = isPrivate
-        ? "🔒 Private"
-        : isHidden
-          ? "🙈 Hidden"
-          : "🌎 Public";
-
-      // Author and date
-      const authorInfo = author ? `✍️ ${author}` : "👻 No author";
-      const dateInfo = publishDate
-        ? `📅 ${new Date(publishDate).toLocaleDateString()}`
-        : "⏳ Draft";
-      
-      // Category info
-      const categoryInfo = categoryTitle 
-        ? `🏷️ ${categoryTitle}` 
-        : "📂 No category";
+      const visibility = isPrivate ? "Private" : isHidden ? "Hidden" : "Public";
+      const authorInfo = author || "No author";
+      const dateInfo = publishDate ? new Date(publishDate).toLocaleDateString() : "Draft";
+      const categoryInfo = categoryTitle || "No category";
 
       return {
         title: title || "Untitled Blog",

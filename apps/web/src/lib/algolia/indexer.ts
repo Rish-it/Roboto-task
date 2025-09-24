@@ -57,18 +57,42 @@ export async function indexBlogPosts() {
     console.log('Fetching blog posts from Sanity...');
     const blogPosts = await client.fetch(BLOG_INDEXING_QUERY);
     
+    if (!blogPosts || blogPosts.length === 0) {
+      console.log('No blog posts found to index');
+      return { success: true, count: 0 };
+    }
+    
     // Transform data for Algolia
     const algoliaObjects: BlogPost[] = blogPosts.map((post: any) => ({
       objectID: post._id,
-      ...post,
-      // Extract plain text from rich text for better searchability
-      content: extractTextFromRichText(post.richText),
+      _id: post._id,
+      _type: post._type,
+      title: post.title,
+      description: post.description || '',
+      slug: post.slug,
+      publishedAt: post.publishedAt,
+      orderRank: post.orderRank,
+      author: post.author,
+      category: post.category,
+      content: post.content || '',
+      imageUrl: post.imageUrl,
+      // Add searchable content combining title, description, and content
+      _searchableContent: [
+        post.title,
+        post.description,
+        post.content,
+        post.author?.name,
+        post.category?.title
+      ].filter(Boolean).join(' ').toLowerCase(),
     }));
 
     console.log(`Indexing ${algoliaObjects.length} blog posts...`);
     
+    // Configure search settings
+    await configureSearchSettings();
+    
     // Index to Algolia using v5 API
-    const response = await algoliaClient.saveObjects({ 
+    await algoliaClient.saveObjects({ 
       indexName: ALGOLIA_INDEX_NAME,
       objects: algoliaObjects 
     });
@@ -81,18 +105,48 @@ export async function indexBlogPosts() {
   }
 }
 
-// Helper function to extract plain text from rich text
-function extractTextFromRichText(richText: any[]): string {
-  if (!richText) return '';
-  
-  return richText
-    .filter(block => block._type === 'block')
-    .map(block => 
-      block.children
-        ?.filter((child: any) => child._type === 'span')
-        .map((child: any) => child.text)
-        .join(' ')
-    )
-    .filter(Boolean)
-    .join(' ');
+// Configure search settings for optimal search experience
+async function configureSearchSettings() {
+  try {
+    await algoliaClient.setSettings({
+      indexName: ALGOLIA_INDEX_NAME,
+      indexSettings: {
+        // Attributes to search in
+        searchableAttributes: [
+          'title',
+          'description', 
+          'content',
+          '_searchableContent',
+          'author.name',
+          'category.title'
+        ],
+        // Attributes for faceting/filtering
+        attributesForFaceting: [
+          'category.title',
+          'category.slug',
+          'author.name'
+        ],
+        // Custom ranking
+        customRanking: [
+          'desc(publishedAt)',
+          'asc(orderRank)'
+        ],
+        // Highlight configuration
+        highlightPreTag: '<mark>',
+        highlightPostTag: '</mark>',
+        // Snippet configuration
+        attributesToSnippet: [
+          'description:150',
+          'content:200'
+        ],
+        // Distinct configuration
+        attributeForDistinct: '_id',
+        distinct: true
+      }
+    });
+    
+    console.log('Search settings configured successfully');
+  } catch (error) {
+    console.warn('Failed to configure search settings:', error);
+  }
 }

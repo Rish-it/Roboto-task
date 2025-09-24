@@ -12,7 +12,8 @@
     "build": "sanity build",
     "deploy": "sanity deploy",
     "type": "sanity schema extract --enforce-required-fields && sanity typegen generate",
-    "check-types": "tsc --noEmit"
+    "check-types": "tsc --noEmit",
+    "migrate:categories": "npx sanity exec scripts/migrate-blog-categories.ts --with-user-token"
   },
   "keywords": [
     "sanity"

@@ -341,9 +341,31 @@ export const queryCategoryPageData = defineQuery(`
   }
 `);
 
+// Enhanced query for category by slug
+export const queryCategoryBySlug = defineQuery(`
+  *[_type == "category" && slug.current == $slug][0]{
+    _id,
+    _type,
+    title,
+    description,
+    "slug": slug.current,
+    color,
+    icon,
+    featured,
+    seoTitle,
+    seoDescription,
+    "totalBlogs": count(*[_type == "blog" && category->slug.current == $slug && (seoHideFromLists != true)])
+  }
+`);
+
+// Query for blogs by category with pagination
 export const queryBlogsByCategory = defineQuery(`
-  *[_type == "blog" && references($categoryId) && (seoHideFromLists != true)] | order(orderRank asc, publishedAt desc){
-    ${blogCardFragment}
+  {
+    "blogs": *[_type == "blog" && category->slug.current == $categorySlug && (seoHideFromLists != true)] 
+      | order(orderRank asc, publishedAt desc) [$offset...($offset + $limit)]{
+        ${blogCardFragment}
+      },
+    "totalCount": count(*[_type == "blog" && category->slug.current == $categorySlug && (seoHideFromLists != true)])
   }
 `);
 

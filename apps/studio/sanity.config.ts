@@ -17,7 +17,7 @@ import { schemaTypes } from "./schemaTypes";
 import { structure } from "./structure";
 import { createPageTemplate, getPresentationUrl } from "./utils/helper";
 
-const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "";
+const projectId = process.env.SANITY_STUDIO_PROJECT_ID ?? "jm1ceehq";
 const dataset = process.env.SANITY_STUDIO_DATASET;
 const title = process.env.SANITY_STUDIO_TITLE;
 
