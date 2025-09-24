@@ -3,8 +3,34 @@
 import { useHits } from 'react-instantsearch';
 import Link from 'next/link';
 import { formatDate } from '@/utils';
-import { CategoryBadge } from '@/components/categoryBadge';
-import type { CategoryColor } from '@/utils/categoryUtils';
+import { getCategoryIcon } from '@/utils/categoryUtils';
+
+// Simple category badge without colors for search results
+function SimpleSearchCategoryBadge({ category }: { category: any }) {
+  const getDefaultIcon = (title: string) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
+    if (titleLower.includes('design') || titleLower.includes('ui') || titleLower.includes('ux')) return 'Palette';
+    if (titleLower.includes('business') || titleLower.includes('marketing')) return 'TrendingUp';
+    if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'BookOpen';
+    if (titleLower.includes('news') || titleLower.includes('update')) return 'Newspaper';
+    if (titleLower.includes('ai') || titleLower.includes('artificial')) return 'Brain';
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return 'Smartphone';
+    if (titleLower.includes('web') || titleLower.includes('frontend')) return 'Globe';
+    if (titleLower.includes('data') || titleLower.includes('analytics')) return 'BarChart3';
+    if (titleLower.includes('security') || titleLower.includes('crypto')) return 'Shield';
+    return 'Tag';
+  };
+  
+  const IconComponent = getCategoryIcon(category.icon || getDefaultIcon(category.title));
+  
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-neutral-100 text-neutral-900 text-xs font-semibold rounded-full">
+      {IconComponent && <IconComponent className="h-3 w-3" />}
+      {category.title}
+    </span>
+  );
+}
 
 interface BlogHit {
   objectID: string;
@@ -19,7 +45,6 @@ interface BlogHit {
   category?: {
     title: string;
     slug: string;
-    color: CategoryColor;
     icon?: string;
   };
   imageUrl?: string;
@@ -71,12 +96,7 @@ export function SearchHits({ showEmptyState = true }: SearchHitsProps) {
                 </time>
               )}
               {hit.category && (
-                <CategoryBadge
-                  title={hit.category.title}
-                  color={hit.category.color}
-                  icon={hit.category.icon}
-                  size="small"
-                />
+                <SimpleSearchCategoryBadge category={hit.category} />
               )}
             </div>
             

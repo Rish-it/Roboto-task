@@ -430,7 +430,7 @@ export function generateBlogIndexPage() {
     _type: "blogIndex" as const,
     title: "Insights & Updates",
     description:
-      "Discover our latest blogs, industry insights, and expert perspectives on technology, development, and digital innovation. Stay informed with in-depth analysis and practical guides.",
+      "Latest insights and expert perspectives on technology and development.",
     slug: {
       type: "slug",
       current: "/blog",

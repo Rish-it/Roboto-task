@@ -3,7 +3,34 @@ import { stegaClean } from "next-sanity";
 
 import { ArticleJsonLd } from "@/components/json-ld";
 import { BlogCard, BlogHeader } from "@/components/blog-card";
-import { CategoryBadge } from "@/components/categoryBadge";
+import { getCategoryIcon } from "@/utils/categoryUtils";
+
+// Simple category badge without colors for blog pages
+function SimpleBlogCategoryBadge({ title, icon }: { title: string; icon?: string }) {
+  const getDefaultIcon = (title: string) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
+    if (titleLower.includes('design') || titleLower.includes('ui') || titleLower.includes('ux')) return 'Palette';
+    if (titleLower.includes('business') || titleLower.includes('marketing')) return 'TrendingUp';
+    if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'BookOpen';
+    if (titleLower.includes('news') || titleLower.includes('update')) return 'Newspaper';
+    if (titleLower.includes('ai') || titleLower.includes('artificial')) return 'Brain';
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return 'Smartphone';
+    if (titleLower.includes('web') || titleLower.includes('frontend')) return 'Globe';
+    if (titleLower.includes('data') || titleLower.includes('analytics')) return 'BarChart3';
+    if (titleLower.includes('security') || titleLower.includes('crypto')) return 'Shield';
+    return 'Tag';
+  };
+  
+  const IconComponent = getCategoryIcon(icon || getDefaultIcon(title));
+  
+  return (
+    <span className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-100 text-neutral-900 text-sm font-semibold rounded-full">
+      {IconComponent && <IconComponent className="h-4 w-4" />}
+      {title}
+    </span>
+  );
+}
 import { Pagination, PaginationInfo } from "@/components/pagination";
 import { RichText } from "@/components/richtext";
 import { SanityImage } from "@/components/sanity-image";
@@ -86,12 +113,7 @@ function CategoryPageContent({
       <div className="container my-16 mx-auto px-4 md:px-6">
         <div className="text-center space-y-4 mb-8">
           <div className="flex justify-center">
-            <CategoryBadge
-              title={title}
-              color={color}
-              icon={icon}
-              size="large"
-            />
+            <SimpleBlogCategoryBadge title={title} icon={icon} />
           </div>
           <BlogHeader 
             title={`${title} Blog Posts`}

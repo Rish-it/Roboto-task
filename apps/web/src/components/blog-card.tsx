@@ -2,8 +2,35 @@ import Link from "next/link";
 
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 
-import { CategoryBadge } from "./categoryBadge";
 import { SanityImage } from "./sanity-image";
+import { getCategoryIcon } from "@/utils/categoryUtils";
+
+// Simple category badge without colors
+function SimpleCategoryBadge({ category }: { category: any }) {
+  const getDefaultIcon = (title: string) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
+    if (titleLower.includes('design') || titleLower.includes('ui') || titleLower.includes('ux')) return 'Palette';
+    if (titleLower.includes('business') || titleLower.includes('marketing')) return 'TrendingUp';
+    if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'BookOpen';
+    if (titleLower.includes('news') || titleLower.includes('update')) return 'Newspaper';
+    if (titleLower.includes('ai') || titleLower.includes('artificial')) return 'Brain';
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return 'Smartphone';
+    if (titleLower.includes('web') || titleLower.includes('frontend')) return 'Globe';
+    if (titleLower.includes('data') || titleLower.includes('analytics')) return 'BarChart3';
+    if (titleLower.includes('security') || titleLower.includes('crypto')) return 'Shield';
+    return 'Tag';
+  };
+  
+  const IconComponent = getCategoryIcon(category.icon || getDefaultIcon(category.title));
+  
+  return (
+    <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-neutral-100 text-neutral-900 text-xs font-semibold rounded-full">
+      {IconComponent && <IconComponent className="h-3 w-3" />}
+      {category.title}
+    </span>
+  );
+}
 
 type Blog = NonNullable<
   NonNullable<QueryBlogIndexPageDataResult>["blogs"]
@@ -175,12 +202,7 @@ export function BlogCard({ blog }: BlogCardProps) {
         <div className="flex items-center justify-between">
           <BlogMeta publishedAt={publishedAt} />
           {category && (
-            <CategoryBadge
-              title={category.title}
-              color={category.color}
-              icon={category.icon}
-              size="small"
-            />
+            <SimpleCategoryBadge category={category} />
           )}
         </div>
         <BlogContent title={title} slug={slug} description={description} />
@@ -201,7 +223,7 @@ export function BlogHeader({
     <div className="mx-auto max-w-7xl px-6 lg:px-8">
       <div className="mx-auto max-w-2xl text-center">
         <h1 className="text-3xl font-bold sm:text-4xl">{title}</h1>
-        <p className="mt-4 text-lg leading-8 text-muted-foreground">
+        <p className="mt-2 text-base leading-6 text-muted-foreground">
           {description}
         </p>
       </div>

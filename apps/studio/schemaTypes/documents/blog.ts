@@ -150,7 +150,6 @@ export const blog = defineType({
       author: "authors.0.name",
       publishDate: "publishedAt",
       categoryTitle: "category.title",
-      categoryColor: "category.color",
     },
     prepare: ({
       title,

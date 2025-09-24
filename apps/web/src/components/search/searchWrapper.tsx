@@ -2,7 +2,6 @@
 
 import { InstantSearchNext } from 'react-instantsearch-nextjs';
 import { searchClient, ALGOLIA_INDEX_NAME } from '@/lib/algolia/client';
-import { SearchInput } from './searchInput';
 import { SearchResults } from './searchResults';
 import { ConditionalBlogList } from './conditionalBlogList';
 import { useSearchState } from '@/hooks/useSearchState';
@@ -38,8 +37,6 @@ const SearchContent = memo(({ children }: SearchContentProps) => {
   
   return (
     <>
-      <SearchInput />
-      
       {query.length > 0 ? (
         <div className="animate-in fade-in-50 duration-300">
           <SearchResults />
