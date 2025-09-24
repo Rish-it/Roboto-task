@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { formatDate } from '@/utils';
 import { getCategoryIcon } from '@/utils/categoryUtils';
 
-// Simple category badge without colors for search results
 function SimpleSearchCategoryBadge({ category }: { category: any }) {
   const getDefaultIcon = (title: string) => {
     const titleLower = title.toLowerCase();

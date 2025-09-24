@@ -1,6 +1,5 @@
 import { defineQuery } from "next-sanity";
 
-// Base fragments for reusable query parts
 const imageFragment = /* groq */ `
   image{
     ...,
@@ -99,7 +98,6 @@ const buttonsFragment = /* groq */ `
   }
 `;
 
-// Page builder block fragments
 const ctaBlock = /* groq */ `
   _type == "cta" => {
     ...,
@@ -197,11 +195,6 @@ const pageBuilderFragment = /* groq */ `
   }
 `;
 
-/**
- * Query to extract a single image from a page document
- * This is used as a type reference only and not for actual data fetching
- * Helps with TypeScript inference for image objects
- */
 export const queryImageType = defineQuery(`
   *[_type == "page" && defined(image)][0]{
     ${imageFragment}
@@ -309,7 +302,6 @@ export const queryGenericPageOGData = defineQuery(`
   }
 `);
 
-// Category-related queries
 export const queryCategoriesList = defineQuery(`
   *[_type == "category"] | order(featured desc, sortOrder asc, title asc){
     _id,
@@ -342,7 +334,6 @@ export const queryCategoryPageData = defineQuery(`
   }
 `);
 
-// Enhanced query for category by slug
 export const queryCategoryBySlug = defineQuery(`
   *[_type == "category" && slug.current == $slug][0]{
     _id,
@@ -359,7 +350,6 @@ export const queryCategoryBySlug = defineQuery(`
   }
 `);
 
-// Query for blogs by category with pagination
 export const queryBlogsByCategory = defineQuery(`
   {
     "blogs": *[_type == "blog" && category->slug.current == $categorySlug && (seoHideFromLists != true)] 

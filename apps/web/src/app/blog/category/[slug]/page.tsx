@@ -195,7 +195,6 @@ interface CarouselShowcaseProps {
 }
 
 function CarouselShowcase({ blogs }: CarouselShowcaseProps) {
-  // Get icon with fallbacks based on category name
   const getDefaultIcon = (title: string) => {
     const titleLower = title.toLowerCase();
     if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
@@ -225,7 +224,6 @@ function CarouselShowcase({ blogs }: CarouselShowcaseProps) {
           categoryIcon: iconName,
           content: (
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Image */}
             <div className="md:w-1/2">
               <img
                 src={blog.image?.asset ? urlFor(blog.image as any).width(600).height(400).url() : "https://images.unsplash.com/photo-1593508512255-86ab42a8e620"}
@@ -234,14 +232,12 @@ function CarouselShowcase({ blogs }: CarouselShowcaseProps) {
               />
             </div>
             
-            {/* Content */}
             <div className="md:w-1/2 flex flex-col justify-between">
               <div>
                 <p className="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed mb-6">
                   {blog.description}
                 </p>
                 
-                {/* Meta info */}
                 {(blog.publishedAt || blog.authors) && (
                   <div className="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400 mb-6">
                     {blog.publishedAt && (
@@ -258,7 +254,6 @@ function CarouselShowcase({ blogs }: CarouselShowcaseProps) {
                 )}
               </div>
               
-              {/* Read Full Article Button - Right aligned */}
               <div className="flex justify-end">
                 <Link 
                   href={blog.slug || "#"}

@@ -30,7 +30,6 @@ export function BlogViewContainer({
 
   return (
     <div className="mt-8">
-      {/* View Toggle - positioned above the content */}
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-xl font-semibold">
           {currentView === "carousel" ? "Featured Stories" : "Latest Posts"}
@@ -52,7 +51,6 @@ interface CarouselViewProps {
 }
 
 function CarouselView({ blogs }: CarouselViewProps) {
-  // Get icon with fallbacks based on category name
   const getDefaultIcon = (title: string) => {
     const titleLower = title.toLowerCase();
     if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
@@ -82,7 +80,6 @@ function CarouselView({ blogs }: CarouselViewProps) {
           categoryIcon: iconName,
           content: (
           <div className="flex flex-col md:flex-row gap-6">
-            {/* Image */}
             <div className="md:w-1/2">
               <img
                 src={blog.image?.asset ? urlFor(blog.image as any).width(600).height(400).url() : "https://images.unsplash.com/photo-1593508512255-86ab42a8e620"}
@@ -91,14 +88,12 @@ function CarouselView({ blogs }: CarouselViewProps) {
               />
             </div>
             
-            {/* Content */}
             <div className="md:w-1/2 flex flex-col justify-between">
               <div>
                 <p className="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed mb-6">
                   {blog.description}
                 </p>
                 
-                {/* Meta info */}
                 {(blog.publishedAt || blog.authors) && (
                   <div className="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400 mb-6">
                     {blog.publishedAt && (
@@ -115,36 +110,36 @@ function CarouselView({ blogs }: CarouselViewProps) {
                 )}
               </div>
               
-              {/* Pokemon Display - Positioned above the Read Full Article Button */}
-              {blog.pokemon && (
-                <div className="mb-4">
-                  <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-full px-3 py-2 border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
-                    <img
-                      src={blog.pokemon.spriteUrl}
-                      alt={blog.pokemon.name}
-                      className="w-8 h-8 object-contain"
-                      loading="lazy"
-                    />
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-medium capitalize text-neutral-900 dark:text-neutral-100">
-                        {blog.pokemon.name}
-                      </span>
-                      <span className="text-xs text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">
-                        #{blog.pokemon.id.toString().padStart(3, '0')}
-                      </span>
+              <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
+                {blog.pokemon && (
+                  <div className="flex-shrink-0">
+                    <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-full px-3 py-2 border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
+                      <img
+                        src={blog.pokemon.spriteUrl}
+                        alt={blog.pokemon.name}
+                        className="w-8 h-8 object-contain"
+                        loading="lazy"
+                      />
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm font-medium capitalize text-neutral-900 dark:text-neutral-100">
+                          {blog.pokemon.name}
+                        </span>
+                        <span className="text-xs text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">
+                          #{blog.pokemon.id.toString().padStart(3, '0')}
+                        </span>
+                      </div>
                     </div>
                   </div>
+                )}
+                
+                <div className="flex justify-end">
+                  <Link 
+                    href={blog.slug || "#"}
+                    className="inline-flex items-center px-4 sm:px-6 py-3 bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 shadow-sm text-sm sm:text-base"
+                  >
+                    Read Full Article
+                  </Link>
                 </div>
-              )}
-              
-              {/* Read Full Article Button */}
-              <div className="flex justify-end">
-                <Link 
-                  href={blog.slug || "#"}
-                  className="inline-flex items-center px-6 py-3 bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 shadow-sm"
-                >
-                  Read Full Article
-                </Link>
               </div>
             </div>
           </div>
