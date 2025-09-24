@@ -1,8 +1,9 @@
 import { notFound } from "next/navigation";
 import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
-import { CategoryNavigation } from "@/components/categoryNavigation";
 import { PageBuilder } from "@/components/pagebuilder";
 import { SearchWrapper } from "@/components/search/searchWrapper";
+import { SearchInput } from "@/components/search/searchInput";
+import { SearchCategoryBar } from "@/components/search-category-bar";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogIndexPageData, queryCategoriesList } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
@@ -84,8 +85,13 @@ export default async function BlogIndexPage() {
     <main className="bg-background">
       <div className="container my-16 mx-auto px-4 md:px-6">
         <BlogHeader title={title} description={description} />
-        <CategoryNavigation categories={categoriesRes?.data || []} />
         <SearchWrapper className="mt-8">
+          <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-8">
+            <SearchCategoryBar categories={categoriesRes?.data || []} />
+            <div className="flex-1 max-w-md">
+              <SearchInput placeholder="Search blog posts..." className="w-full" />
+            </div>
+          </div>
           <BlogList 
             featuredBlogs={featuredBlogs}
             remainingBlogs={remainingBlogs}
