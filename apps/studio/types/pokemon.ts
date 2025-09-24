@@ -29,8 +29,8 @@ export interface PokemonData {
   name: string;
   types: string[];
   spriteUrl: string;
-  height: number;
-  weight: number;
+  height: number | null;
+  weight: number | null;
 }
 
 export interface PokemonSearchResult {

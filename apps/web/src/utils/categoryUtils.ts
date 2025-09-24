@@ -15,10 +15,12 @@ export type CategorySize = "small" | "medium" | "large";
 export interface CategoryData {
   _id: string;
   title: string;
+  description?: string | null;
   slug: string;
-  color: CategoryColor;
-  icon?: string;
-  featured: boolean;
+  color: CategoryColor | null;
+  icon?: string | null;
+  featured: boolean | null;
+  sortOrder?: number | null;
   postCount: number;
 }
 
@@ -54,8 +56,8 @@ export function getCategoryIcon(iconName?: string) {
   return IconComponent as React.ComponentType<{ className?: string }>;
 }
 
-export function getCategoryColorClass(color: CategoryColor): string {
-  return categoryColorVariants[color] || categoryColorVariants.blue;
+export function getCategoryColorClass(color: CategoryColor | null): string {
+  return categoryColorVariants[color || 'blue'] || categoryColorVariants.blue;
 }
 
 export function getCategorySizeClass(size: CategorySize): string {

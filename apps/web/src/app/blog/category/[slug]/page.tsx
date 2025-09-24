@@ -1,8 +1,8 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
+import Link from "next/link";
 import { BlogCard, BlogHeader } from "@/components/blog-card";
 import { CategoryNavigation } from "@/components/categoryNavigation";
-import { Pagination } from "@/components/pagination";
 import { sanityFetch } from "@/lib/sanity/live";
 import { 
   queryCategoryBySlug, 
@@ -11,13 +11,27 @@ import {
 } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
 import { handleErrors } from "@/utils";
+import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 
 interface CategoryPageProps {
   params: Promise<{ slug: string }>;
   searchParams: Promise<{ page?: string }>;
 }
 
-const POSTS_PER_PAGE = 12;
+const POSTS_PER_PAGE = 6;
+
+interface Category {
+  _id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  seoTitle?: string;
+  seoDescription?: string;
+}
+
+type Blog = NonNullable<
+  NonNullable<QueryBlogIndexPageDataResult>["blogs"]
+>[number];
 
 async function fetchCategoryData(categorySlug: string) {
   return await handleErrors(
@@ -76,19 +90,16 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const { page: pageParam } = await searchParams;
   const currentPage = parseInt(pageParam || "1", 10);
 
-  // Validate page number
   if (currentPage < 1 || !Number.isInteger(currentPage)) {
     notFound();
   }
 
-  // Fetch data in parallel
   const [categoryRes, blogsRes, categoriesRes] = await Promise.all([
     fetchCategoryData(categorySlug),
     fetchCategoryBlogs(categorySlug, currentPage),
     fetchCategories()
   ]);
 
-  // Handle errors
   const [category, categoryErr] = categoryRes;
   const [blogsData, blogsErr] = blogsRes;
   const [categories] = categoriesRes;
@@ -101,7 +112,6 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   const categoryData = category.data;
   const totalPages = Math.ceil(totalCount / POSTS_PER_PAGE);
 
-  // Validate page bounds
   if (currentPage > totalPages && totalPages > 0) {
     notFound();
   }
@@ -112,7 +122,7 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
   return (
     <main className="bg-background">
       <div className="container my-16 mx-auto px-4 md:px-6">
-        <CategoryHeader category={categoryData} totalCount={totalCount} />
+        <CategoryHeader category={categoryData} />
         
         <CategoryNavigation 
           categories={categories?.data || []} 
@@ -122,15 +132,22 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
         {hasBlogs ? (
           <>
             <BlogGrid blogs={blogs} />
-            {showPagination && (
-              <div className="mt-16">
-                <Pagination
+            <div className="mt-12 space-y-6">
+              <PaginationInfo
+                currentPage={currentPage}
+                totalPages={totalPages}
+                totalCount={totalCount}
+                itemsPerPage={POSTS_PER_PAGE}
+                currentItemsCount={blogs.length}
+              />
+              {showPagination && (
+                <SimplePagination
                   currentPage={currentPage}
                   totalPages={totalPages}
                   baseUrl={`/blog/category/${categorySlug}`}
                 />
-              </div>
-            )}
+              )}
+            </div>
           </>
         ) : (
           <EmptyState category={categoryData} />
@@ -141,11 +158,10 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 }
 
 interface CategoryHeaderProps {
-  category: any;
-  totalCount: number;
+  category: Category;
 }
 
-function CategoryHeader({ category, totalCount }: CategoryHeaderProps) {
+function CategoryHeader({ category }: CategoryHeaderProps) {
   return (
     <div className="text-center mb-12">
       <div className="flex items-center justify-center gap-3 mb-4">
@@ -160,20 +176,16 @@ function CategoryHeader({ category, totalCount }: CategoryHeaderProps) {
       </div>
       
       {category.description && (
-        <p className="text-xl text-muted-foreground max-w-2xl mx-auto mb-4">
+        <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
           {category.description}
         </p>
       )}
-      
-      <div className="text-sm text-muted-foreground">
-        {totalCount} article{totalCount !== 1 ? 's' : ''} in this category
-      </div>
     </div>
   );
 }
 
 interface BlogGridProps {
-  blogs: any[];
+  blogs: Blog[];
 }
 
 function BlogGrid({ blogs }: BlogGridProps) {
@@ -186,8 +198,89 @@ function BlogGrid({ blogs }: BlogGridProps) {
   );
 }
 
+interface PaginationInfoProps {
+  currentPage: number;
+  totalPages: number;
+  totalCount: number;
+  itemsPerPage: number;
+  currentItemsCount: number;
+}
+
+function PaginationInfo({ 
+  currentPage, 
+  totalPages, 
+  totalCount, 
+  itemsPerPage, 
+  currentItemsCount 
+}: PaginationInfoProps) {
+  const startItem = totalCount === 0 ? 0 : (currentPage - 1) * itemsPerPage + 1;
+  const endItem = startItem + currentItemsCount - 1;
+  
+  return (
+    <div className="flex items-center justify-between text-sm text-muted-foreground border-t pt-6">
+      <div>
+        Showing {startItem}–{endItem} of {totalCount} article{totalCount !== 1 ? 's' : ''}
+      </div>
+      <div>
+        Page {currentPage} of {Math.max(totalPages, 1)}
+      </div>
+    </div>
+  );
+}
+
+interface SimplePaginationProps {
+  currentPage: number;
+  totalPages: number;
+  baseUrl: string;
+}
+
+function SimplePagination({ currentPage, totalPages, baseUrl }: SimplePaginationProps) {
+  if (totalPages <= 1) return null;
+
+  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const showPages = pages.slice(Math.max(0, currentPage - 3), Math.min(totalPages, currentPage + 2));
+
+  return (
+    <div className="mt-16 flex justify-center">
+      <nav className="flex items-center gap-2">
+        {currentPage > 1 && (
+          <Link
+            href={`${baseUrl}?page=${currentPage - 1}`}
+            className="px-4 py-2 border rounded-lg hover:bg-muted transition-colors"
+          >
+            Previous
+          </Link>
+        )}
+        
+        {showPages.map((page) => (
+          <Link
+            key={page}
+            href={page === 1 ? baseUrl : `${baseUrl}?page=${page}`}
+            className={`px-4 py-2 border rounded-lg transition-colors ${
+              page === currentPage
+                ? 'bg-primary text-primary-foreground'
+                : 'hover:bg-muted'
+            }`}
+          >
+            {page}
+          </Link>
+        ))}
+        
+        {currentPage < totalPages && (
+          <Link
+            href={`${baseUrl}?page=${currentPage + 1}`}
+            className="px-4 py-2 border rounded-lg hover:bg-muted transition-colors"
+          >
+            Next
+          </Link>
+        )}
+      </nav>
+    </div>
+  );
+}
+
 interface EmptyStateProps {
-  category: any;
+  category: Category;
 }
 
 function EmptyState({ category }: EmptyStateProps) {
@@ -212,12 +305,12 @@ function EmptyState({ category }: EmptyStateProps) {
         Check back soon or explore other categories.
       </p>
       
-      <a 
+      <Link 
         href="/blog" 
         className="inline-flex items-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
       >
         Browse All Articles
-      </a>
+      </Link>
     </div>
   );
 }

@@ -3884,6 +3884,7 @@
         "optional": false
       },
       "category": {
+        "description": "Blog category for organizing and filtering content",
         "type": "objectAttribute",
         "value": {
           "type": "object",

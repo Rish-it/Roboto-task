@@ -8,8 +8,8 @@ interface PokemonData {
   name: string;
   types: string[];
   spriteUrl: string;
-  height: number;
-  weight: number;
+  height: number | null;
+  weight: number | null;
 }
 
 interface PokemonCardProps {
@@ -165,13 +165,13 @@ export function PokemonCard({ pokemon }: PokemonCardProps) {
           <div className="grid grid-cols-2 gap-4">
             <div className="text-center">
               <p className={`text-lg font-bold ${mainTypeStyle.text}`}>
-                {(pokemon.height / 10).toFixed(1)}m
+                {pokemon.height ? (pokemon.height / 10).toFixed(1) + 'm' : 'Unknown'}
               </p>
               <p className={`text-xs opacity-70 ${mainTypeStyle.text}`}>Height</p>
             </div>
             <div className="text-center">
               <p className={`text-lg font-bold ${mainTypeStyle.text}`}>
-                {(pokemon.weight / 10).toFixed(1)}kg
+                {pokemon.weight ? (pokemon.weight / 10).toFixed(1) + 'kg' : 'Unknown'}
               </p>
               <p className={`text-xs opacity-70 ${mainTypeStyle.text}`}>Weight</p>
             </div>

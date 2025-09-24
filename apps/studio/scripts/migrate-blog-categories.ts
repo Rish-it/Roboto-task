@@ -1,8 +1,8 @@
 import { createClient } from '@sanity/client';
 
 const client = createClient({
-  projectId: process.env.SANITY_STUDIO_PROJECT_ID || 'jm1ceehq',
-  dataset: process.env.SANITY_STUDIO_DATASET || 'production',
+  projectId: process.env.SANITY_STUDIO_PROJECT_ID!,
+  dataset: process.env.SANITY_STUDIO_DATASET!,
   apiVersion: '2025-02-10',
   useCdn: false,
   token: process.env.SANITY_API_WRITE_TOKEN,
@@ -21,7 +21,10 @@ const DEFAULT_CATEGORY = {
 
 async function createDefaultCategory() {
   try {
-    const existingCategory = await client.fetch(`*[_type == "category" && _id == "${DEFAULT_CATEGORY._id}"][0]`);
+    const existingCategory = await client.fetch(
+      `*[_type == "category" && _id == $id][0]`,
+      { id: DEFAULT_CATEGORY._id }
+    );
     
     if (!existingCategory) {
       console.log('Creating default category...');
