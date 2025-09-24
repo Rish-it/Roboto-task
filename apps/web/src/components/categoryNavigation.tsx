@@ -6,8 +6,7 @@ import { memo } from "react";
 import { useCategoryFiltering } from "@/hooks/useCategoryFiltering";
 import { 
   type CategoryData,
-  getCategoryIcon,
-  getCategoryColorClass 
+  getCategoryIcon 
 } from "@/utils/categoryUtils";
 
 interface CategoryNavigationProps {
@@ -72,25 +71,48 @@ const CategoryNavigationItem = memo<CategoryNavigationItemProps>(function Catego
   category,
   isActive = false,
 }) {
-  const IconComponent = getCategoryIcon(category.icon || undefined);
-  const colorClass = getCategoryColorClass(category.color);
+  // Get icon with fallbacks based on category name
+  const getDefaultIcon = (title: string) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
+    if (titleLower.includes('design') || titleLower.includes('ui') || titleLower.includes('ux')) return 'Palette';
+    if (titleLower.includes('business') || titleLower.includes('marketing')) return 'TrendingUp';
+    if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'BookOpen';
+    if (titleLower.includes('news') || titleLower.includes('update')) return 'Newspaper';
+    if (titleLower.includes('ai') || titleLower.includes('artificial')) return 'Brain';
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return 'Smartphone';
+    if (titleLower.includes('web') || titleLower.includes('frontend')) return 'Globe';
+    if (titleLower.includes('data') || titleLower.includes('analytics')) return 'BarChart3';
+    if (titleLower.includes('security') || titleLower.includes('crypto')) return 'Shield';
+    return 'Tag';
+  };
+  
+  const IconComponent = getCategoryIcon(category.icon || undefined) || getCategoryIcon(getDefaultIcon(category.title));
+  
+  // Simple button style without colors
+  const getButtonStyle = (active: boolean) => {
+    if (active) {
+      return "bg-primary text-primary-foreground shadow hover:bg-primary/90";
+    }
+    return "bg-neutral-100 text-neutral-900 hover:bg-neutral-200 shadow-sm";
+  };
 
   return (
     <Link href={`/blog/category/${category.slug}`} className="group">
       <span
         className={cn(
-          "inline-flex items-center gap-1.5 font-medium border transition-all duration-200 hover:shadow-sm",
-          "text-foreground text-xs px-2.5 py-1 rounded-full",
-          isActive ? "ring-2 ring-primary/20 bg-primary/10" : "",
-          colorClass
+          "inline-flex items-center gap-2 font-medium transition-all duration-200",
+          "text-sm px-4 py-2 rounded-md",
+          "hover:shadow-md transform hover:scale-105",
+          getButtonStyle(isActive)
         )}
       >
         {IconComponent && (
-          <IconComponent className="h-3 w-3 flex-shrink-0" />
+          <IconComponent className="h-4 w-4 flex-shrink-0" />
         )}
         {category.title}
-        <span className="text-xs opacity-75">
-          ({category.postCount})
+        <span className="text-xs bg-black/20 px-2 py-0.5 rounded-full">
+          {category.postCount}
         </span>
       </span>
     </Link>

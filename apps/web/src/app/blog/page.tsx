@@ -1,9 +1,10 @@
 import { notFound } from "next/navigation";
-import { BlogCard, BlogHeader, FeaturedBlogCard } from "@/components/blog-card";
+import { BlogHeader } from "@/components/blog-card";
 import { PageBuilder } from "@/components/pagebuilder";
 import { SearchWrapper } from "@/components/search/searchWrapper";
 import { SearchInput } from "@/components/search/searchInput";
-import { SearchCategoryBar } from "@/components/search-category-bar";
+import { CategoryNavigation } from "@/components/categoryNavigation";
+import { BlogViewContainer } from "@/components/blog-view-container";
 import { sanityFetch } from "@/lib/sanity/live";
 import { queryBlogIndexPageData, queryCategoriesList } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
@@ -87,14 +88,15 @@ export default async function BlogIndexPage() {
         <BlogHeader title={title} description={description} />
         <SearchWrapper className="mt-8">
           <div className="flex flex-col md:flex-row gap-4 md:items-center justify-between mb-8">
-            <SearchCategoryBar categories={categoriesRes?.data || []} />
+            <CategoryNavigation categories={categoriesRes?.data || []} />
             <div className="flex-1 max-w-md">
               <SearchInput placeholder="Search blog posts..." className="w-full" />
             </div>
           </div>
-          <BlogList 
+          <BlogViewContainer 
             featuredBlogs={featuredBlogs}
             remainingBlogs={remainingBlogs}
+            categories={categoriesRes?.data || []}
           />
         </SearchWrapper>
       </div>
@@ -105,28 +107,3 @@ export default async function BlogIndexPage() {
   );
 }
 
-interface BlogListProps {
-  featuredBlogs: any[];
-  remainingBlogs: any[];
-}
-
-function BlogList({ featuredBlogs, remainingBlogs }: BlogListProps) {
-  return (
-    <div className="mt-12">
-      {featuredBlogs.length > 0 && (
-        <div className="mx-auto mb-12 lg:mb-20 grid grid-cols-1 gap-8 md:gap-12">
-          {featuredBlogs.map((blog) => (
-            <FeaturedBlogCard key={blog._id} blog={blog} />
-          ))}
-        </div>
-      )}
-      {remainingBlogs.length > 0 && (
-        <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2">
-          {remainingBlogs.map((blog) => (
-            <BlogCard key={blog._id} blog={blog} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}

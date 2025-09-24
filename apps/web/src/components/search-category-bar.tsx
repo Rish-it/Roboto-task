@@ -13,8 +13,7 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { 
   type CategoryData,
-  getCategoryIcon,
-  getCategoryColorClass 
+  getCategoryIcon
 } from "@/utils/categoryUtils";
 
 interface SearchCategoryBarProps {
@@ -109,7 +108,7 @@ export function SearchCategoryBar({
               {filteredCategories.length > 0 ? (
                 filteredCategories.map((category) => {
                   const IconComponent = getCategoryIcon(category.icon || undefined);
-                  const colorClass = getCategoryColorClass(category.color);
+                  const colorClass = "bg-neutral-100 text-neutral-900 hover:bg-neutral-200";
                   const isActive = activeCategory === category.slug;
 
                   return (

@@ -3,6 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { BlogCard, BlogHeader } from "@/components/blog-card";
 import { CategoryNavigation } from "@/components/categoryNavigation";
+import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import { sanityFetch } from "@/lib/sanity/live";
 import { 
   queryCategoryBySlug, 
@@ -11,6 +12,7 @@ import {
 } from "@/lib/sanity/query";
 import { getSEOMetadata } from "@/lib/seo";
 import { handleErrors } from "@/utils";
+import { urlFor } from "@/lib/sanity/client";
 import type { QueryBlogIndexPageDataResult } from "@/lib/sanity/sanity.types";
 
 interface CategoryPageProps {
@@ -131,8 +133,8 @@ export default async function CategoryPage({ params, searchParams }: CategoryPag
 
         {hasBlogs ? (
           <>
-            <BlogGrid blogs={blogs} />
-            <div className="mt-12 space-y-6">
+            <CarouselShowcase blogs={blogs} />
+            <div className="mt-16 space-y-6">
               <PaginationInfo
                 currentPage={currentPage}
                 totalPages={totalPages}
@@ -188,9 +190,106 @@ interface BlogGridProps {
   blogs: Blog[];
 }
 
+interface CarouselShowcaseProps {
+  blogs: Blog[];
+}
+
+function CarouselShowcase({ blogs }: CarouselShowcaseProps) {
+  // Get icon with fallbacks based on category name
+  const getDefaultIcon = (title: string) => {
+    const titleLower = title.toLowerCase();
+    if (titleLower.includes('tech') || titleLower.includes('code') || titleLower.includes('dev')) return 'Code';
+    if (titleLower.includes('design') || titleLower.includes('ui') || titleLower.includes('ux')) return 'Palette';
+    if (titleLower.includes('business') || titleLower.includes('marketing')) return 'TrendingUp';
+    if (titleLower.includes('tutorial') || titleLower.includes('guide')) return 'BookOpen';
+    if (titleLower.includes('news') || titleLower.includes('update')) return 'Newspaper';
+    if (titleLower.includes('ai') || titleLower.includes('artificial')) return 'Brain';
+    if (titleLower.includes('mobile') || titleLower.includes('app')) return 'Smartphone';
+    if (titleLower.includes('web') || titleLower.includes('frontend')) return 'Globe';
+    if (titleLower.includes('data') || titleLower.includes('analytics')) return 'BarChart3';
+    if (titleLower.includes('security') || titleLower.includes('crypto')) return 'Shield';
+    return 'Tag';
+  };
+
+  const cards = blogs.map((blog, index) => {
+    const categoryTitle = blog.category?.title || "General";
+    const iconName = blog.category?.icon || getDefaultIcon(categoryTitle);
+    
+    return (
+      <Card 
+        key={blog._id} 
+        card={{
+          src: blog.image?.asset ? urlFor(blog.image as any).width(800).height(600).url() : "https://images.unsplash.com/photo-1593508512255-86ab42a8e620",
+          title: blog.title || "Untitled",
+          category: categoryTitle,
+          categoryIcon: iconName,
+          content: (
+          <div className="flex flex-col md:flex-row gap-6">
+            {/* Image */}
+            <div className="md:w-1/2">
+              <img
+                src={blog.image?.asset ? urlFor(blog.image as any).width(600).height(400).url() : "https://images.unsplash.com/photo-1593508512255-86ab42a8e620"}
+                alt={blog.title || "Blog image"}
+                className="w-full h-64 md:h-80 object-cover rounded-2xl"
+              />
+            </div>
+            
+            {/* Content */}
+            <div className="md:w-1/2 flex flex-col justify-between">
+              <div>
+                <p className="text-neutral-600 dark:text-neutral-400 text-base leading-relaxed mb-6">
+                  {blog.description}
+                </p>
+                
+                {/* Meta info */}
+                {(blog.publishedAt || blog.authors) && (
+                  <div className="flex items-center gap-4 text-sm text-neutral-500 dark:text-neutral-400 mb-6">
+                    {blog.publishedAt && (
+                      <span>
+                        {new Date(blog.publishedAt).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
+                      </span>
+                    )}
+                    {blog.authors && <span>By {blog.authors.name}</span>}
+                  </div>
+                )}
+              </div>
+              
+              {/* Read Full Article Button - Right aligned */}
+              <div className="flex justify-end">
+                <Link 
+                  href={blog.slug || "#"}
+                  className="inline-flex items-center px-6 py-3 bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                >
+                  Read Full Article
+                </Link>
+              </div>
+            </div>
+          </div>
+        ),
+      }} 
+        index={index} 
+        layout={true}
+      />
+    );
+  });
+
+  return (
+    <div className="w-full h-full py-20">
+      <h2 className="max-w-7xl pl-4 mx-auto text-xl md:text-5xl font-bold text-neutral-800 dark:text-neutral-200 font-sans mb-8">
+        Featured Articles
+      </h2>
+      <Carousel items={cards} />
+    </div>
+  );
+}
+
 function BlogGrid({ blogs }: BlogGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 xl:grid-cols-3 mt-12">
+    <div className="grid grid-cols-1 gap-8 md:gap-12 lg:grid-cols-2 xl:grid-cols-3">
       {blogs.map((blog) => (
         <BlogCard key={blog._id} blog={blog} />
       ))}
