@@ -80,7 +80,8 @@ const blogCardFragment = /* groq */ `
   ${imageFragment},
   publishedAt,
   ${blogAuthorFragment},
-  ${blogCategoryFragment}
+  ${blogCategoryFragment},
+  ${pokemonFragment}
 `;
 
 const buttonsFragment = /* groq */ `

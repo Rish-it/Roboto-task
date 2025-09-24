@@ -35,7 +35,7 @@ export function BlogViewContainer({
         <h2 className="text-xl font-semibold">
           {currentView === "carousel" ? "Featured Stories" : "Latest Posts"}
         </h2>
-        <ViewToggle onViewChange={handleViewChange} defaultView="grid" />
+        <ViewToggle currentView={currentView} onViewChange={handleViewChange} />
       </div>
 
       {currentView === "carousel" ? (
@@ -115,11 +115,33 @@ function CarouselView({ blogs }: CarouselViewProps) {
                 )}
               </div>
               
-              {/* Read Full Article Button - Right aligned */}
+              {/* Pokemon Display - Positioned above the Read Full Article Button */}
+              {blog.pokemon && (
+                <div className="mb-4">
+                  <div className="inline-flex items-center gap-2 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-sm rounded-full px-3 py-2 border border-neutral-200/50 dark:border-neutral-700/50 shadow-sm">
+                    <img
+                      src={blog.pokemon.spriteUrl}
+                      alt={blog.pokemon.name}
+                      className="w-8 h-8 object-contain"
+                      loading="lazy"
+                    />
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-medium capitalize text-neutral-900 dark:text-neutral-100">
+                        {blog.pokemon.name}
+                      </span>
+                      <span className="text-xs text-neutral-500 dark:text-neutral-400 bg-neutral-100 dark:bg-neutral-800 px-2 py-0.5 rounded-full">
+                        #{blog.pokemon.id.toString().padStart(3, '0')}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              )}
+              
+              {/* Read Full Article Button */}
               <div className="flex justify-end">
                 <Link 
                   href={blog.slug || "#"}
-                  className="inline-flex items-center px-6 py-3 bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200"
+                  className="inline-flex items-center px-6 py-3 bg-neutral-900 text-white rounded-lg hover:bg-neutral-800 transition-colors dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-neutral-200 shadow-sm"
                 >
                   Read Full Article
                 </Link>

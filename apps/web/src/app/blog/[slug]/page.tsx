@@ -385,6 +385,14 @@ export default async function BlogSlugPage({
             </div>
           )}
           <RichText richText={richText ?? []} />
+          
+          {/* Mobile Pokemon Card */}
+          {pokemon && (
+            <div className="mt-12 lg:hidden">
+              <h3 className="text-lg font-semibold mb-4">Featured Pokemon</h3>
+              <PokemonCard pokemon={pokemon} />
+            </div>
+          )}
         </main>
 
         <div className="hidden lg:block">
