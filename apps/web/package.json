@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@algolia/client-search": "^5.34.1",
-    "@sanity/asset-utils": "^2.2.1",
+    "@sanity/asset-utils": "^2.3.0",
     "@sanity/client": "^7.6.0",
     "@sanity/image-url": "^1.1.0",
     "@sanity/visual-editing": "^2.15.0",
